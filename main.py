@@ -17,7 +17,7 @@ def my_job():
 def my_demo2():
     scheduler = BlockingScheduler()
     # scheduler.add_job(lambda: asyncio.run(my_demo()), 'interval', seconds=300)
-    scheduler.add_job(lambda: asyncio.run(aio_http_demo()), 'cron', day='wed,fri,sun', hour=18, minute='1-30')
+    scheduler.add_job(lambda: asyncio.run(aio_http_demo()), 'cron', day_of_week='wed,fri,sun', hour=18, minute='1-30')
     scheduler.start()
 
 
