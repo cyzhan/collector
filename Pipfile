@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+beautifulsoup4 = "==4.10.0"
+requests = "==2.27.1"
+mysqlclient = "==2.1.0"
+dbutils = "==3.0.2"
+python-dotenv = "==0.19.2"
+apscheduler = "==3.9.1"
+aiohttp = "==3.8.1"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
