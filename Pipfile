@@ -11,6 +11,7 @@ dbutils = "==3.0.2"
 python-dotenv = "==0.19.2"
 apscheduler = "==3.9.1"
 aiohttp = "==3.8.1"
+aiomysql = "==0.0.22"
 
 [dev-packages]
 
