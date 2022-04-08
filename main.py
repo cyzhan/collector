@@ -66,6 +66,8 @@ if __name__ == '__main__':
     print('start')
     # my_demo2()
     loop = asyncio.get_event_loop()
+    asyncio.set_event_loop(loop)
     loop.run_until_complete(aiomysql_demo(evloop=loop))
+    loop.close()
     print('end')
 

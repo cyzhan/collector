@@ -1,3 +1,4 @@
+import os
 import aiomysql
 from pymysql import converters
 
@@ -19,10 +20,10 @@ class AioDBUtil:
             conv = converters.conversions.copy()
             conv[10] = str  # convert dates to strings
             conv[7] = str  # convert datetime to strings
-            self.__pool = await aiomysql.create_pool(minsize=1, maxsize=5, host='inno.codimd.com', port=3306,
-                                                     user='root', password='qwer', db='lottery',
-                                                     loop=loop, conv=conv)
-
+            self.__pool = await aiomysql.create_pool(minsize=1, maxsize=5, host=os.getenv("DB_HOST"), port=3306,
+                                                     user=os.getenv("DB_USER"), password=os.getenv("DB_PASSWORD"),
+                                                     db='lottery', loop=loop, conv=conv)
+            print('mysql connection pool created')
 
 
 
