@@ -3,8 +3,9 @@ import time
 import aiohttp
 from apscheduler.schedulers.blocking import BlockingScheduler
 from bs4 import BeautifulSoup
-from service import lottery_service
-from util.aiodb_util import AioDBUtil
+from service import lottery_service, demo_service
+from util.aiodb_util import db
+
 
 latest_round_info = {'round_id': None, 'ts': int(time.time())}
 MEGA645_URL = "https://vietlott.vn/en/trung-thuong/ket-qua-trung-thuong/645.html"
@@ -56,18 +57,18 @@ async def aio_http_demo():
             print(f'update row = {update_row}')
 
 
-async def aiomysql_demo(evloop):
-    db_util = AioDBUtil()
-    await db_util.create_pool(evloop)
-    await db_util.execute('select * from rabbit.user')
-
+async def init_aiodb(evloop):
+    await db.create_pool(evloop)
+    # await db.execute('select * from rabbit.user')
+    # await db.close_pool()
 
 if __name__ == '__main__':
     print('start')
-    # my_demo2()
     loop = asyncio.get_event_loop()
     asyncio.set_event_loop(loop)
-    loop.run_until_complete(aiomysql_demo(evloop=loop))
+    loop.run_until_complete(init_aiodb(evloop=loop))
+    loop.run_until_complete(demo_service.simple_query('select * from rabbit.user'))
+    loop.run_until_complete(db.close_pool())
     loop.close()
     print('end')
 

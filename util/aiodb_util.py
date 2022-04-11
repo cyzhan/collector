@@ -7,6 +7,13 @@ class AioDBUtil:
     def __init__(self):
         self.__pool = None
 
+    def get_pool(self):
+        return self.__pool
+
+    async def close_pool(self):
+        self.__pool.close()
+        await self.__pool.wait_closed()
+
     async def execute(self, sql: str):
         async with self.__pool.acquire() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cur:
@@ -24,6 +31,22 @@ class AioDBUtil:
                                                      user=os.getenv("DB_USER"), password=os.getenv("DB_PASSWORD"),
                                                      db='lottery', loop=loop, conv=conv)
             print('mysql connection pool created')
+        print('connection pool already exist')
 
 
+db = AioDBUtil()
+
+
+def cursor_inject(func):
+    async def wrapper(*args, **kwargs):
+        async with db.get_pool().acquire() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cur:
+                try:
+                    result = await func(*args, **kwargs, cursor=cur)
+                    await conn.commit()
+                    return result
+                except Exception as e:
+                    await conn.rollback()
+                    raise e
+    return wrapper
 
