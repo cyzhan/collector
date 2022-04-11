@@ -1,9 +1,12 @@
-from util.aiodb_util import cursor_inject
+import time
+
+from util.aiodb_util import db
 
 
-@cursor_inject
-async def simple_query(sql: str, cursor):
-    count = await cursor.execute(sql)
-    print(f'update row = {count}')
-    r = await cursor.fetchall()
-    print(f'r = {r}')
+def my_job():
+    print(time.strftime('%Y-%m-%d %A %H:%M:%S', time.localtime()))
+
+
+async def simple_query(sql: str):
+    r = await db.query_once(sql)
+    print(f'{r}')

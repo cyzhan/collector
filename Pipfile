@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 beautifulsoup4 = "==4.10.0"
-requests = "==2.27.1"
 mysqlclient = "==2.1.0"
 dbutils = "==3.0.2"
 python-dotenv = "==0.19.2"
