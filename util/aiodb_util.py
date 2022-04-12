@@ -28,14 +28,6 @@ class AioDBUtil:
         self.__pool.close()
         await self.__pool.wait_closed()
 
-    async def execute(self, sql: str):
-        async with self.__pool.acquire() as conn:
-            async with conn.cursor(aiomysql.DictCursor) as cur:
-                count = await cur.execute(sql)
-                print(f'update row = {count}')
-                r = await cur.fetchall()
-                print(f'r = {r}')
-
     @cursor_inject
     async def query_once(self, sql: str, cursor, params=None) -> tuple:
         if params is None:
@@ -52,7 +44,18 @@ class AioDBUtil:
         print(f'updated row = {count}')
         return count
 
-    async def create_pool(self, loop):
+    @cursor_inject
+    async def insert_and_get_last_id(self, sql: str, cursor, params=None) -> int:
+        updated_row: int = await cursor.execute(sql, params)
+        if updated_row == 0:
+            raise Exception('insert error')
+        return cursor.lastrowid
+
+    @cursor_inject
+    async def batch_insert(self, sql: str, cursor, params=None) -> int:
+        return await cursor.executemany(sql, params)
+
+    async def create_pool(self, loop) -> None:
         if self.__pool is None:
             conv = converters.conversions.copy()
             conv[10] = str  # convert dates to strings
